@@ -346,7 +346,23 @@ describe "Method Combinators", ->
       items = [{price: 5}]
       eg.incrementPrices items
 
-      expect(items[0].price).toBe(15)   
+      expect(items[0].price).toBe(15)
+
+    it 'should collect results into return value of array', ->
+
+      decorator = C.splatter
+
+      class SplatterClazz
+        mapToOnes:
+          decorator \
+          (item) ->
+            1
+
+      eg = new SplatterClazz()
+      items = [{},{}]
+      value = eg.mapToOnes items
+
+      expect(value[1]).toBe(1)        
 
 describe "Asynchronous Method Combinators", ->
 
