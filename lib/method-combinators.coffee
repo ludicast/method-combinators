@@ -66,14 +66,15 @@ this.postcondition =
     (predicate = throwable) and (throwable = 'Failed postcondition') unless predicate
     this.after -> throw throwable unless predicate.apply(this, arguments)
 
-this.splatterAt = (index)->
-  (func)->
-    (args...)->
-      array = args[index]
-      for element in array
-        newArgs = args.slice(0)
-        newArgs[index] = element
-        func.apply this, newArgs
+this.splatterAt = 
+  (index)->
+    (func)->
+      (args...)->
+        array = args[index]
+        for element in array
+          newArgs = args.slice(0)
+          newArgs[index] = element
+          func.apply this, newArgs
 
 this.splatter = this.splatterAt(0)
 
