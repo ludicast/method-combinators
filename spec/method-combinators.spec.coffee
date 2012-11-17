@@ -312,6 +312,42 @@ describe "Method Combinators", ->
       expect(-> sane.setSanity(true)).not.toThrow 'Failed precondition'
       expect(-> sane.setSanity(false)).not.toThrow 'Failed precondition'
 
+  describe "splatterAt", ->
+
+    it 'should run function on inputted parameter index', ->
+
+      decorator = C.splatterAt(1)
+
+      class SplatterAtClazz
+        incrementPrices:
+          decorator \
+          (increment, item) ->
+            item.price += increment 
+
+      eg = new SplatterAtClazz()
+      items = [{price: 5}]
+      eg.incrementPrices 10, items
+
+      expect(items[0].price).toBe(15)
+
+  describe "splatter", ->
+
+    it 'should run splatterAt with index of 0', ->
+
+      decorator = C.splatter
+
+      class SplatterClazz
+        incrementPrices:
+          decorator \
+          (item) ->
+            item.price += 10
+
+      eg = new SplatterClazz()
+      items = [{price: 5}]
+      eg.incrementPrices items
+
+      expect(items[0].price).toBe(15)   
+
 describe "Asynchronous Method Combinators", ->
 
   a = undefined
