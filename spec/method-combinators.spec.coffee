@@ -348,6 +348,25 @@ describe "Method Combinators", ->
 
       expect(items[0].price).toBe(15)
 
+    it 'should alternately take string name of method', ->
+
+      decorator = C.splatter
+
+      class SplatterClazz
+   
+
+        incrementPrices:
+          decorator "incrementPrice"
+        incrementPrice:
+          (item) ->
+            item.price += 10
+
+      eg = new SplatterClazz()
+      items = [{price: 5}]
+      eg.incrementPrices items
+
+      expect(items[0].price).toBe(15)
+
     it 'should collect results into return value of array', ->
 
       decorator = C.splatter

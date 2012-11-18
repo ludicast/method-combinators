@@ -68,8 +68,9 @@ this.postcondition =
 
 this.splatterAt = 
   (index)->
-    (func)->
+    (funcRef)->
       (args...)->
+        func = myFunc funcRef, this
         array = args[index]
         for element in array
           newArgs = args.slice(0)
@@ -113,3 +114,10 @@ this.async = do (async = undefined) ->
         async_predicate.apply(this, argv.concat(decorated_base))
 
   async
+
+# helper methods
+myFunc = (funcRef, self)->
+  if typeof funcRef == "string"
+    self[funcRef]
+  else
+    funcRef
