@@ -37,6 +37,17 @@ this.provided =
 
 # ## Extras
 
+# Allows branching between functions depending on the result of a test function
+
+this.branchOn = 
+  (predicate)->
+    ({failure, success})->
+      ->
+        if predicate.apply(this, arguments)
+          success?.apply(this, arguments)
+        else
+          failure?.apply(this, arguments)
+
 # If the method thows an error, retry it again a certain number of times.
 # e.g. `retry(3) -> # doSomething as many as four times`
 this.retry =

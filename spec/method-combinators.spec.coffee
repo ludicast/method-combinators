@@ -168,6 +168,23 @@ describe "Method Combinators", ->
 
       expect(eg.foo).toBe('foo')
 
+  describe "branchOn", ->
+
+    it "runs success/fail function on resulting test", ->
+
+      decorator = C.branchOn (value)->
+        value
+
+      class BranchOnClazz
+        getValue:
+          decorator
+            success: -> "success"
+            failure: -> "failure"
+
+      eg = new BranchOnClazz()
+      expect(eg.getValue(true)).toBe('success')
+      expect(eg.getValue(false)).toBe('failure')
+
   describe "retry", ->
 
     describe 'times < 0', ->
