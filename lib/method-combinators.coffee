@@ -79,6 +79,17 @@ this.splatterAt =
 
 this.splatter = this.splatterAt(0)
 
+this.sed =
+  (transformRef)->
+    (fromIndex = 0, toIndex)->
+      (func)->
+        (args...)->
+          toIndex ||= fromIndex
+          transformFunc = myFunc transformRef, this
+          args[toIndex] = transformFunc.call this, args[fromIndex]
+          func.apply this, args
+
+
 # ## Asynchronous Method Combinators
 
 this.async = do (async = undefined) ->
