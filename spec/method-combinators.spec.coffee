@@ -457,3 +457,60 @@ describe "helpers", ->
 
       eg = new MyClass()
       expect(eg.double 4).toBe 8
+
+    it "should pipe successive functions in args", ->
+
+      addAndSquareFunction = C.helpers.my "add", "square"
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+
+      class MyClass
+        doubleAndSquare:
+          repeatArg \
+          addAndSquareFunction
+
+        add: (x,y)-> x + y
+        square: (n)-> n*n
+
+      eg = new MyClass()
+      expect(eg.doubleAndSquare 4).toBe 64
+
+    it "should pipe to array of functions", ->
+
+      addAndSquareFunction = C.helpers.my ["add", "square"]
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+
+      class MyClass
+        doubleAndSquare:
+          repeatArg \
+          addAndSquareFunction
+
+        add: (x,y)-> x + y
+        square: (n)-> n*n
+
+      eg = new MyClass()
+      expect(eg.doubleAndSquare 4).toBe 64
+
+    it "should should allow actual functions to be threaded as well", ->
+
+      add = (x,y)-> x + y
+      addAndSquareFunction = C.helpers.my add, "square"
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+
+      class MyClass
+        doubleAndSquare:
+          repeatArg \
+          addAndSquareFunction
+
+        square: (n)-> n*n
+
+      eg = new MyClass()
+      expect(eg.doubleAndSquare 4).toBe 64
