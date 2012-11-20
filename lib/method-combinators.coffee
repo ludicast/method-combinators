@@ -73,6 +73,12 @@ this.postcondition =
     (predicate = throwable) and (throwable = 'Failed postcondition') unless predicate
     this.after -> throw throwable unless predicate.apply(this, arguments)
 
+# Sugar to reference instance method by name
+this.my =
+  (name)->
+    ->
+      this[name].apply this, arguments
+
 # ## Asynchronous Method Combinators
 
 this.async = do (async = undefined) ->
