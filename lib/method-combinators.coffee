@@ -66,6 +66,16 @@ this.postcondition =
     (predicate = throwable) and (throwable = 'Failed postcondition') unless predicate
     this.after -> throw throwable unless predicate.apply(this, arguments)
 
+# Edits parameters
+this.sed =
+  (transform)->
+    (fromIndex = 0, toIndex)->
+      (base)->
+        (args...)->
+          toIndex ||= fromIndex
+          args[toIndex] = transform.call this, args[fromIndex]
+          base.apply this, args
+
 # ## Asynchronous Method Combinators
 
 this.async = do (async = undefined) ->

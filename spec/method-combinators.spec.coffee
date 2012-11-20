@@ -312,6 +312,48 @@ describe "Method Combinators", ->
       expect(-> sane.setSanity(true)).not.toThrow 'Failed precondition'
       expect(-> sane.setSanity(false)).not.toThrow 'Failed precondition'
 
+  describe "sed", ->
+    it "should transform parameter at input index", ->
+      decorator = C.sed (username)->
+        username.toUpperCase()
+      class SedClazz
+        announce: 
+          decorator(1) \
+          (place, username)->
+            "Welcome to #{place} #{username}!"
+
+      eg = new SedClazz()
+      announcement = eg.announce "Home", "Joe"
+      expect(announcement).toBe("Welcome to Home JOE!")
+
+    it "should default to 0", ->
+      decorator = C.sed -> @capitalize arguments[0]
+      class SedClazz
+        capitalize: (username)->
+          username.toUpperCase()
+        announce:
+          decorator() \
+          (username)->
+            "Welcome #{username}!"
+
+      eg = new SedClazz()
+      announcement = eg.announce "Joe"
+      expect(announcement).toBe("Welcome JOE!")
+
+    it "should allow param population of different index", ->
+      decorator = C.sed -> @capitalize arguments[0]
+      class SedClazz
+        capitalize: (username)->
+          username.toUpperCase()
+        details:
+          decorator(0,1) \
+          (username, password)->
+            "username:#{username}|password:#{password}"
+
+      eg = new SedClazz()
+      announcement = eg.details "joe"
+      expect(announcement).toBe("username:joe|password:JOE")
+
 describe "Asynchronous Method Combinators", ->
 
   a = undefined
