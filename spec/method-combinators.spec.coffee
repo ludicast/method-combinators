@@ -330,25 +330,6 @@ describe "Method Combinators", ->
       expect(-> sane.setSanity(true)).not.toThrow 'Failed precondition'
       expect(-> sane.setSanity(false)).not.toThrow 'Failed precondition'
 
-  describe "my combinator", ->
-    it "should reference instance method", ->
-
-      addFunction = C.my "add"
-      
-      repeatArg = (func)->
-        (firstArg)->
-          func.apply this, [firstArg, firstArg]
-      
-      class MyClass
-        double:
-          repeatArg \
-          addFunction
-
-        add: (x,y)-> x + y
-
-      eg = new MyClass()
-      expect(eg.double 4).toBe 8
-
 describe "Asynchronous Method Combinators", ->
 
   a = undefined
@@ -453,3 +434,26 @@ describe "Asynchronous Method Combinators", ->
         decorate(base) 'no', ->
 
         expect(a).toEqual([])
+
+
+describe "helpers", ->
+
+  describe "my", ->
+  
+    it "should reference instance method", ->
+
+      addFunction = C.helpers.my "add"
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+      
+      class MyClass
+        double:
+          repeatArg \
+          addFunction
+
+        add: (x,y)-> x + y
+
+      eg = new MyClass()
+      expect(eg.double 4).toBe 8
