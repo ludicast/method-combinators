@@ -460,7 +460,7 @@ describe "helpers", ->
 
   describe "pipe", ->
 
-    it "should should allow actual (and my-created) functions to be threaded", ->
+    it "should allow actual (and my-created) functions to be threaded", ->
 
       add = (x,y)-> x + y
       addAndSquareFunction = C.helpers.pipe add, C.helpers.my("square")
@@ -469,14 +469,14 @@ describe "helpers", ->
         (firstArg)->
           func.apply this, [firstArg, firstArg]
 
-      class MyClass
+      class PipeClass
         doubleAndSquare:
           repeatArg \
           addAndSquareFunction
 
         square: (n)-> n*n
 
-      eg = new MyClass()
+      eg = new PipeClass()
       expect(eg.doubleAndSquare 4).toBe 64
 
   describe "pipe my", ->
@@ -489,7 +489,7 @@ describe "helpers", ->
         (firstArg)->
           func.apply this, [firstArg, firstArg]
 
-      class MyClass
+      class PipeMyClass
         doubleAndSquare:
           repeatArg \
           addAndSquareFunction
@@ -497,5 +497,5 @@ describe "helpers", ->
         add: (x,y)-> x + y
         square: (n)-> n*n
 
-      eg = new MyClass()
+      eg = new PipeMyClass()
       expect(eg.doubleAndSquare 4).toBe 64
