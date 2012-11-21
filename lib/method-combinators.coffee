@@ -118,3 +118,15 @@ this.async = do (async = undefined) ->
         async_predicate.apply(this, argv.concat(decorated_base))
 
   async
+
+# ## Combinator Helpers
+this.helpers = do (helpers = {}, combinators = this)->
+
+  # Sugar to reference instance methods by name.
+  helpers.my =
+    (name)->
+      (args...)->
+        func = this[name]
+        func.apply this, args
+
+  helpers

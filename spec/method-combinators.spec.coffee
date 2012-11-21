@@ -468,3 +468,24 @@ describe "Asynchronous Method Combinators", ->
         decorate(base) 'no', ->
 
         expect(a).toEqual([])
+describe "helpers", ->
+
+  describe "my", ->
+  
+    it "should reference instance method", ->
+
+      addFunction = C.helpers.my "add"
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+      
+      class MyClass
+        double:
+          repeatArg \
+          addFunction
+
+        add: (x,y)-> x + y
+
+      eg = new MyClass()
+      expect(eg.double 4).toBe 8
