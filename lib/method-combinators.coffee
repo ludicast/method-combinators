@@ -141,8 +141,7 @@ this.helpers = do (helpers = {}, combinators = this)->
  
   # Similar to threading macros, but works on instance variable names
   helpers.pipeMy =
-    (funcRefs...)->
-      helpers.pipe.apply this,
-        (combinators.splatter helpers.my) funcRefs
+    ->
+      helpers.pipe ((combinators.splatter helpers.my) arguments)...
  
   helpers
