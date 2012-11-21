@@ -124,7 +124,7 @@ this.helpers = do (helpers = {}, combinators = this, resolveFunction = undefined
   
   resolveFunction = (func)->
     if typeof func is "string"
-      this[func]
+      helpers.my func
     else
       func
 
@@ -141,7 +141,7 @@ this.helpers = do (helpers = {}, combinators = this, resolveFunction = undefined
       (args...)->
         result = undefined
         for func in functions
-          result = resolveFunction.call(this, func).apply this, args
+          result = resolveFunction(func).apply this, args
           args = [result]
         result
  
