@@ -120,11 +120,9 @@ this.async = do (async = undefined) ->
   async
 
 # ## Combinator Helpers
-this.helpers = do (helpers = {})->
+this.helpers = do (helpers = {}, combinators = this)->
 
   # Sugar to reference instance methods by name.
-  # It also threads multiple methods, allows you to use unbound functions as well as strings, and
-  # if the first parameter is an array, it auto-splats it
   helpers.my =
     (name)->
       (args...)->
@@ -140,12 +138,11 @@ this.helpers = do (helpers = {})->
           result = func.apply this, args
           args = [result]
         result
-
-  # Similar to threading macros, but 
+ 
+  # Similar to threading macros, but works on instance variable names
   helpers.pipeMy =
     (funcRefs...)->
-      functions = for funcRef in funcRefs
-        helpers.my funcRef
-      helpers.pipe.apply this, functions
+      helpers.pipe.apply this,
+        (combinators.splatter helpers.my) funcRefs
  
   helpers
