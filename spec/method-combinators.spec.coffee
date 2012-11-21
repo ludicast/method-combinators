@@ -492,7 +492,7 @@ describe "helpers", ->
 
   describe "pipe", ->
 
-    it "should allow functions to be threaded", ->
+    it "should thread functions", ->
 
       add = (x,y)-> x + y
       square = (n)-> n*n
@@ -506,6 +506,25 @@ describe "helpers", ->
         doubleAndSquare:
           repeatArg \
           addAndSquareFunction
+
+      eg = new PipeClass()
+      expect(eg.doubleAndSquare 4).toBe 64
+
+    it "should thread named methods", ->
+      
+      addAndSquareFunction = C.helpers.pipe "add", "square"
+      
+      repeatArg = (func)->
+        (firstArg)->
+          func.apply this, [firstArg, firstArg]
+
+      class PipeClass
+        doubleAndSquare:
+          repeatArg \
+          addAndSquareFunction
+
+        add: (x,y)-> x + y
+        square: (n)-> n*n
 
       eg = new PipeClass()
       expect(eg.doubleAndSquare 4).toBe 64

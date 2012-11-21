@@ -120,7 +120,13 @@ this.async = do (async = undefined) ->
   async
 
 # ## Combinator Helpers
-this.helpers = do (helpers = {}, combinators = this)->
+this.helpers = do (helpers = {}, combinators = this, resolveFunction = undefined)->
+  
+  resolveFunction = (func)->
+    if typeof func is "string"
+      this[func]
+    else
+      func
 
   # Sugar to reference instance methods by name.
   helpers.my =
@@ -135,7 +141,7 @@ this.helpers = do (helpers = {}, combinators = this)->
       (args...)->
         result = undefined
         for func in functions
-          result = func.apply this, args
+          result = resolveFunction.call(this, func).apply this, args
           args = [result]
         result
  
