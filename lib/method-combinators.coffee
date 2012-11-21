@@ -129,4 +129,14 @@ this.helpers = do (helpers = {}, combinators = this)->
         func = this[name]
         func.apply this, args
 
+  # Similar to composition & threading macros
+  helpers.pipe  =
+    (functions...)->
+      (args...)->
+        result = undefined
+        for func in functions
+          result = func.apply this, args
+          args = [result]
+        result
+ 
   helpers
