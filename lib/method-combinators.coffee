@@ -110,23 +110,32 @@ this.async = do (async = undefined) ->
   async
 
 # ## Combinator Helpers
-this.helpers =
+this.helpers = do (helpers = {})->
 
   # Sugar to reference instance methods by name.
   # It also threads multiple methods, allows you to use unbound functions as well as strings, and
   # if the first parameter is an array, it auto-splats it
-  my:
-    (names...)->
-      if typeof(names[0]) is "object" #i.e. array
-        names = names[0]
+  helpers.my =
+    (name)->
+      (args...)->
+        func = this[name]
+        func.apply this, args
+
+  # Similar to threading macros
+  helpers.pipe  =
+    (functions...)->
       (args...)->
         result = undefined
-        for name in names
-          func =
-            if typeof(name) == "string"
-              this[name]
-            else
-              name
+        for func in functions
           result = func.apply this, args
           args = [result]
         result
+
+  # Similar to threading macros, but 
+  helpers.pipeMy =
+    (funcRefs...)->
+      functions = for funcRef in funcRefs
+        helpers.my funcRef
+      helpers.pipe.apply this, functions
+ 
+  helpers
