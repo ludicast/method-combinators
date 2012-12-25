@@ -364,6 +364,61 @@ describe "Method Combinators", ->
 
       expect(value[1]).toBe(1)        
 
+  describe "actsAs", ->
+
+    it "wraps input object in another object", ->
+          
+      b = updateCounter: ->
+        @counter++
+
+      decorator = C.actsAs(b)    
+
+      counterObject = { counter: 1 } 
+      
+      class ActsAsClazz
+        update: decorator (obj)->
+          obj.updateCounter() 
+      
+      result = new ActsAsClazz().update(counterObject)
+      expect(counterObject.counter).toBe(2)
+      expect(result).toBe(1)
+      expect(counterObject.updateCounter).toBe(undefined)
+
+    it "wraps later arguments", ->
+          
+      b = updateCounter: ->
+        @counter++
+
+      decorator = C.actsAs(null,b)
+
+      counterObject = { counter: 1 } 
+      
+      class ActsAsClazz
+        update: decorator (placeholder, obj)->
+          obj.updateCounter() 
+      
+      new ActsAsClazz().update(null, counterObject)
+      expect(counterObject.counter).toBe(2)
+      expect(counterObject.updateCounter).toBe(undefined)
+
+    it "alternatively wraps input object in a class's static methods", ->
+          
+      class b
+        @updateCounter: ->
+          @counter++
+
+      decorator = C.actsAs(b)    
+
+      counterObject = { counter: 1 } 
+      
+      class ActsAsClazz
+        update: decorator (obj)->
+          obj.updateCounter() 
+      
+      new ActsAsClazz().update(counterObject)
+      expect(counterObject.counter).toBe(2)
+      expect(counterObject.updateCounter).toBe(undefined)
+
 describe "Asynchronous Method Combinators", ->
 
   a = undefined

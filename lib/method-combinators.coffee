@@ -83,6 +83,32 @@ this.splatter =
         newArgs[0] = element
         base.apply this, newArgs
 
+# Auto-apply methods and remove after invocation
+this.actsAs =
+  (wrappers...)->
+    originalObjects = []
+
+    wrapObject = (object, wrapper)->
+      oldMethods = {}
+      for key, value of wrapper
+        oldMethods[key] = object[key]
+        object[key] = value
+      originalObjects.push oldMethods
+
+    wrapArguments = ->
+      for wrapper, index in wrappers
+        wrapObject arguments[index], wrapper
+
+    revertArguments = ->
+      for oldMethods, index in originalObjects
+        for key, value of oldMethods
+          arguments[index][key] = value
+
+    this.around (func, args...)->
+      wrapArguments args...
+      func()
+      revertArguments args...
+
 # ## Asynchronous Method Combinators
 
 this.async = do (async = undefined) ->
